@@ -26,6 +26,28 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "Converts FIX protocol messages to JSON using QuickFIX/n."
     });
+
+    // Add a sample FIX message example to the Swagger UI
+    options.MapType<FixRequest>(() => new Microsoft.OpenApi.Models.OpenApiSchema
+    {
+        Type = "object",
+        Properties = new Dictionary<string, Microsoft.OpenApi.Models.OpenApiSchema>
+        {
+            ["fix"] = new()
+            {
+                Type = "string",
+                Description = "The raw FIX message string. Supports SOH (\\x01) and pipe (|) delimiters.",
+                Example = new Microsoft.OpenApi.Any.OpenApiString(
+                    "8=FIX.4.4|9=70|35=D|49=SENDER|56=TARGET|34=1|52=20240101-12:00:00|11=ORD001|21=1|40=2|44=150.25|54=1|55=AAPL|59=0|60=20240101-12:00:00|38=100|10=000|")
+            },
+            ["showOnlyTags"] = new()
+            {
+                Type = "boolean",
+                Description = "If true, return JSON with numeric tag IDs only (no human-readable field names).",
+                Default = new Microsoft.OpenApi.Any.OpenApiBoolean(false)
+            }
+        }
+    });
 });
 
 var app = builder.Build();
