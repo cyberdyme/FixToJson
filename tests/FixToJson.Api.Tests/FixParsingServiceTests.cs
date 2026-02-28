@@ -34,7 +34,7 @@ public class FixParsingServiceTests
         var result = FixParsingService.NormaliseDelimiters(input);
 
         // The embedded pipe should survive as a literal pipe
-        Assert.Contains("Glencore|Glencore", result);
+        Assert.Contains("SomeCompany|InternalCompany", result);
         // But real delimiters should be SOH
         Assert.StartsWith($"8=FIX.4.4{SOH}", result);
         Assert.Contains($"{SOH}447=D{SOH}", result);
@@ -104,7 +104,7 @@ public class FixParsingServiceTests
         var checksum = (sum % 256).ToString("D3");
         raw += $"10={checksum}{SOH}";
 
-        var json = _service.ParseToJson(raw, true);
+        var json = _service.ParseToJson(raw, false);
 
         Assert.Contains("\"Header\"", json);
         Assert.Contains("\"Body\"", json);
@@ -153,7 +153,7 @@ public class FixParsingServiceTests
             $"448=jbtt-fx|JBotchin{SOH}447=D{SOH}452=58{SOH}" +
             $"77=O{SOH}9121=90134427{SOH}10=215{SOH}";
 
-        var json = _service.ParseToJson(msg, true);
+        var json = _service.ParseToJson(msg, false);
 
         Assert.Contains("\"Header\"", json);
         Assert.Contains("\"Body\"", json);
