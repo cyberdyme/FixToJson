@@ -1,0 +1,65 @@
+# FIX-to-JSON Web API
+
+A .NET 9 Web API that converts FIX protocol messages to JSON using [QuickFIX/n](https://github.com/connamara/quickfixn).
+
+## Prerequisites
+
+- [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+
+## Build & Run
+
+```bash
+# Restore and build
+dotnet build FixToJson.sln
+
+# Run the API
+dotnet run --project src/FixToJson.Api
+
+# The API starts on http://localhost:5000
+# Swagger UI: http://localhost:5000/swagger
+```
+
+## Run Tests
+
+```bash
+dotnet test FixToJson.sln
+```
+
+## Usage
+
+### curl — Pipe-delimited FIX message
+
+```bash
+curl -X POST http://localhost:5000/api/fix/to-json \
+  -H "Content-Type: application/json" \
+  -d "{\"fix\": \"8=FIX.4.4|9=744|35=AE|49=ICE|34=22436|52=20230103-10:27:34.563789|56=205|57=1|571=148146|487=0|856=0|828=0|150=F|17=9591500|39=2|570=N|55=5444726|48=G FMG0023!|22=8|461=FXXXXX|207=IFEU|9064=0|916=20230201|917=20230228|32=1|31=911.00|9018=1|9022=1|75=20230103|60=20230103-10:27:34.563362|9413=1|9028=362004|9707=4|9700=1|9701=2|9702=0|9703=0|9705=3|9706=4|552=1|54=1|37=9591497|11=112703716108|453=12|448=jbtt-fx|447=D|452=11|448=Glencore Commodities Ltd.|447=D|452=13|448=207|447=D|452=56|448=2172|447=D|452=4|448=GCMZ1JWB|447=D|452=51|448=GCMZ1JWB|447=D|452=55|448=Mizuho Securities|447=D|452=60|448=MZF|447=D|452=63|448=W|447=D|452=54|448=Glencore|Glencore|447=D|452=57|448=ISV-TT|Glencore|447=D|452=59|448=jbtt-fx|JBotchin|447=D|452=58|77=O|9121=90134427|10=215|\"}"
+```
+
+### curl — Simple Heartbeat
+
+```bash
+curl -X POST http://localhost:5000/api/fix/to-json \
+  -H "Content-Type: application/json" \
+  -d "{\"fix\": \"8=FIX.4.4|9=60|35=0|49=SENDER|56=TARGET|34=1|52=20240101-00:00:00.000|10=092|\"}"
+```
+
+## API Reference
+
+### POST /api/fix/to-json
+
+**Request:**
+```json
+{
+  "fix": "8=FIX.4.4|9=...|35=...|10=...|"
+}
+```
+
+**200 OK Response** — JSON representation of the FIX message with Header, Body, and Trailer sections.
+
+**400 Bad Request** — Problem-details error when the FIX string is missing, empty, or fails structural validation/parsing.
+
+## Notes
+
+- Supports both SOH (`\x01`) and pipe (`|`) delimiters. Pipes are auto-converted to SOH before parsing.
+- No external FIX data dictionary files are required. QuickFIX/n parses the raw tag=value pairs without a dictionary. A dictionary would only be needed for human-readable enum descriptions.
+- Checksum validation is intentionally relaxed because delimiter normalisation changes the byte values.

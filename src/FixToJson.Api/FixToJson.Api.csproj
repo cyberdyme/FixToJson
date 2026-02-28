@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuickFIXn.Core" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX40" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX41" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX42" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX43" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX44" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX50" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX50SP1" Version="1.14.0" />
+    <PackageReference Include="QuickFIXn.FIX50SP2" Version="1.14.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="DataDictionaries\*.xml" />
+  </ItemGroup>
+
+</Project>
